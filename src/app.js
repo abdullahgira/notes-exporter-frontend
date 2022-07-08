@@ -1,10 +1,13 @@
-import { Button } from "semantic-ui-react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Home from "./pages/home";
 
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world! <Button basic>👋</Button>
-    </h1>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={Home} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 

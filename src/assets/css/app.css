@@ -1,0 +1,6 @@
+@import './fonts.css';
+@import './tabs.css';
+
+body, html {
+  height: auto !important;
+}

@@ -1,0 +1,17 @@
+@tailwind base;
+
+.ui.attached.segment {
+  @apply rounded-lg border-0 shadow-sm;
+}
+
+.center-tabs > .ui.menu .item {
+  @apply flex-grow !important;
+}
+
+.ui.secondary.menu .active.item {
+  @apply bg-blue-400;
+}
+
+.ui.secondary.pointing.menu .item {
+  @apply text-gray-500;
+}
