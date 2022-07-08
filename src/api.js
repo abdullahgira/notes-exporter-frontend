@@ -1,7 +1,7 @@
 const api = {
   notion: "/notion",
   googlePlayBooks: "/google-play-books",
-  coursera: "",
+  coursera: "/coursera",
 };
 
 export default api;

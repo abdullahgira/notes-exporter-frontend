@@ -5,6 +5,7 @@ import useTab from "../hooks/use-tab";
 import routes from "../routes";
 import Notion from "./notion";
 import GooglePlayBooks from "./google-play-books";
+import Coursera from "./coursera";
 
 const panes = [
   {
@@ -22,6 +23,15 @@ const panes = [
     render: () => (
       <Tab.Pane className="animate-in">
         <GooglePlayBooks />
+      </Tab.Pane>
+    ),
+  },
+  {
+    menuItem: "Coursera",
+    route: routes.coursera,
+    render: () => (
+      <Tab.Pane className="animate-in">
+        <Coursera />
       </Tab.Pane>
     ),
   },
