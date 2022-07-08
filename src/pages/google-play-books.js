@@ -2,26 +2,27 @@ import { Formik } from "formik";
 import React from "react";
 import { Button, Form } from "semantic-ui-react";
 import api from "../api";
+import FileAttachment from "../components/file-attachment";
 import FormikInput from "../components/formik/formik-input";
 import { axios } from "../config/axios-config";
 import useCopyToClipboard from "../hooks/use-copy-to-clipboard";
 import useLocalStorage from "../lib/use-localstorage";
 
-const Notion = () => {
-  const [secret, setSecret] = useLocalStorage("notion-secret");
-  const [url, setUrl] = React.useState("");
+const GooglePlayBooks = () => {
+  const [file, setFile] = React.useState(null);
 
   const [result, setResult] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
+
   const copy = useCopyToClipboard();
 
   const onSubmit = (data) => {
-    setSecret(data.secret);
-    setUrl(data.url);
-
     setIsLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
     axios
-      .post(api.notion, data)
+      .post(api.googlePlayBooks, formData)
       .then((response) => setResult(response.data))
       .finally(() => setIsLoading(false));
   };
@@ -35,26 +36,17 @@ const Notion = () => {
         </ul>
       </div>
 
-      <Formik
-        initialValues={{ secret: secret, url: "" }}
-        enableReinitialize
-        onSubmit={onSubmit}
-      >
-        {(formik) => (
-          <Form
-            autocomplete="off"
-            onSubmit={formik.handleSubmit}
-            loading={isLoading}
-          >
-            <FormikInput label="Secret" name="secret" />
-            <FormikInput label="Page URL" name="url" className="pb-4" />
+      <Form autocomplete="off" onSubmit={onSubmit} loading={isLoading}>
+        <FileAttachment
+          id="google-notes"
+          setAttachmentData={setFile}
+          label="Select the HTML file exported from google docs."
+        />
 
-            <Button type="submit" size="small" primary>
-              Submit
-            </Button>
-          </Form>
-        )}
-      </Formik>
+        <Button type="submit" size="small" primary>
+          Submit
+        </Button>
+      </Form>
 
       {result && (
         <div className="my-4">
@@ -72,21 +64,11 @@ const Notion = () => {
             id="notes"
           >
             <h1>{result.title}</h1>
-            <a href={url}>{url}</a>
 
             {result.highlights.map((h, i) => (
-              <div key={h.blockId} className="my-4">
-                <p>{h.text}</p>
-                {!h.groupWithNextBlock && (
-                  <a
-                    href={`https://www.notion.so/${result.pageId}#${h.blockId
-                      .split("-")
-                      .join("")}`}
-                  >
-                    Link to block
-                  </a>
-                )}
-                <p></p>
+              <div key={h.note} className="my-4">
+                <p>{h.note}</p>
+                <a href={h.link}>Link</a>
               </div>
             ))}
           </div>
@@ -96,4 +78,4 @@ const Notion = () => {
   );
 };
 
-export default Notion;
+export default GooglePlayBooks;

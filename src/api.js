@@ -1,6 +1,6 @@
 const api = {
-  notion: "",
-  googlePlayBooks: "",
+  notion: "/notion",
+  googlePlayBooks: "/google-play-books",
   coursera: "",
 };
 

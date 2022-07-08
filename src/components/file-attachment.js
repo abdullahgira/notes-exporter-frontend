@@ -1,4 +1,5 @@
 import React from "react";
+import { FiUpload } from "react-icons/fi";
 
 function FileAttachment({ id, label, setAttachmentData }) {
   const selectedContent = {};
@@ -42,6 +43,7 @@ function FileAttachment({ id, label, setAttachmentData }) {
           />
           <label htmlFor={id} className="text-primary flex my-4">
             <div className="flex items-center justify-center cursor-pointer">
+              <FiUpload size="16" className="mr-2" />
               <span>{label || "Select a file to attach"}</span>
             </div>
           </label>

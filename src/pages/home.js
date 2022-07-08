@@ -1,8 +1,10 @@
 import React from "react";
 import { Container, Tab } from "semantic-ui-react";
+
 import useTab from "../hooks/use-tab";
 import routes from "../routes";
 import Notion from "./notion";
+import GooglePlayBooks from "./google-play-books";
 
 const panes = [
   {
@@ -11,6 +13,15 @@ const panes = [
     render: () => (
       <Tab.Pane className="animate-in">
         <Notion />
+      </Tab.Pane>
+    ),
+  },
+  {
+    menuItem: "Google play books",
+    route: routes.googlePlayBooks,
+    render: () => (
+      <Tab.Pane className="animate-in">
+        <GooglePlayBooks />
       </Tab.Pane>
     ),
   },
@@ -27,7 +38,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto mt-8">
+    <div className="max-w-4xl mx-auto mt-8 p-4">
       <h1>Notes exporter</h1>
       <p>
         Export notes from notion, coursera, and google play books. Please follow
