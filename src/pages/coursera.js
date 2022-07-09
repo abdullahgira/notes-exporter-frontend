@@ -1,4 +1,5 @@
 import React from "react";
+import { FiCopy } from "react-icons/fi";
 import { Button, Form } from "semantic-ui-react";
 import api from "../api";
 import FileAttachment from "../components/file-attachment";
@@ -40,7 +41,7 @@ const GooglePlayBooks = () => {
           label="Select the HTML file exported from google docs."
         />
 
-        <Button type="submit" size="small" primary>
+        <Button type="submit" primary>
           Submit
         </Button>
       </Form>
@@ -49,11 +50,11 @@ const GooglePlayBooks = () => {
         <div className="my-4">
           <div class="flex justify-end">
             <Button
-              size="small"
-              className="ml-auto mb-2"
+              className="ml-auto mb-2 flex items-center gap-2"
               onClick={() => copy(document.getElementById("notes").innerHTML)}
             >
-              Copy to clipboard
+              <FiCopy size="16" />
+              Copy
             </Button>
           </div>
           <div
@@ -65,6 +66,12 @@ const GooglePlayBooks = () => {
             {result.highlights.map((h, i) => (
               <div key={h.note} className="my-4">
                 <p>{h.note}</p>
+                {h.yourNote && (
+                  <p>
+                    <strong>Your note: </strong>
+                    {h.yourNote}
+                  </p>
+                )}
                 <a href={h.link}>Link</a>
               </div>
             ))}

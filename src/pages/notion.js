@@ -1,5 +1,6 @@
 import { Formik } from "formik";
 import React from "react";
+import { FiCopy } from "react-icons/fi";
 import { Button, Form } from "semantic-ui-react";
 import api from "../api";
 import FormikInput from "../components/formik/formik-input";
@@ -49,7 +50,7 @@ const Notion = () => {
             <FormikInput label="Secret" name="secret" />
             <FormikInput label="Page URL" name="url" className="pb-4" />
 
-            <Button type="submit" size="small" primary>
+            <Button type="submit" primary>
               Submit
             </Button>
           </Form>
@@ -60,11 +61,11 @@ const Notion = () => {
         <div className="my-4">
           <div class="flex justify-end">
             <Button
-              size="small"
-              className="ml-auto mb-2"
+              className="ml-auto mb-2 flex items-center gap-2"
               onClick={() => copy(document.getElementById("notes").innerHTML)}
             >
-              Copy to clipboard
+              <FiCopy size="16" />
+              Copy
             </Button>
           </div>
           <div
