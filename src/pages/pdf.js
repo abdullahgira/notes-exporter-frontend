@@ -6,7 +6,7 @@ import FileAttachment from "../components/file-attachment";
 import { axios } from "../config/axios-config";
 import useCopyToClipboard from "../hooks/use-copy-to-clipboard";
 
-const Coursera = () => {
+const PDF = () => {
   const [file, setFile] = React.useState(null);
 
   const [result, setResult] = React.useState();
@@ -20,7 +20,7 @@ const Coursera = () => {
     formData.append("file", file);
 
     axios
-      .post(api.coursera, formData)
+      .post(api.pdf, formData)
       .then((response) => setResult(response.data))
       .finally(() => setIsLoading(false));
   };
@@ -36,7 +36,7 @@ const Coursera = () => {
 
       <Form autocomplete="off" onSubmit={onSubmit} loading={isLoading}>
         <FileAttachment
-          id="coursera-notes"
+          id="pdf-notes"
           setAttachmentData={setFile}
           label="Select the HTML file exported from google docs."
         />
@@ -66,13 +66,7 @@ const Coursera = () => {
             {result.highlights.map((h, i) => (
               <div key={h.note} className="my-4">
                 <p>{h.note}</p>
-                {h.yourNote && (
-                  <p>
-                    <strong>Your note: </strong>
-                    {h.yourNote}
-                  </p>
-                )}
-                <a href={h.link}>Link</a>
+                <p>[{h.link.toUpperCase()}]</p>
               </div>
             ))}
           </div>
@@ -82,4 +76,4 @@ const Coursera = () => {
   );
 };
 
-export default Coursera;
+export default PDF;

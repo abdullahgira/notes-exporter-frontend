@@ -6,6 +6,7 @@ import routes from "../routes";
 import Notion from "./notion";
 import GooglePlayBooks from "./google-play-books";
 import Coursera from "./coursera";
+import PDF from "./pdf";
 
 const panes = [
   {
@@ -32,6 +33,15 @@ const panes = [
     render: () => (
       <Tab.Pane className="animate-in">
         <Coursera />
+      </Tab.Pane>
+    ),
+  },
+  {
+    menuItem: "PDF",
+    route: routes.pdf,
+    render: () => (
+      <Tab.Pane className="animate-in">
+        <PDF />
       </Tab.Pane>
     ),
   },
