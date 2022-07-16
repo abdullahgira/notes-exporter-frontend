@@ -7,6 +7,7 @@ import Notion from "./notion";
 import GooglePlayBooks from "./google-play-books";
 import Coursera from "./coursera";
 import PDF from "./pdf";
+import Youtube from "./youtube";
 
 const panes = [
   {
@@ -42,6 +43,15 @@ const panes = [
     render: () => (
       <Tab.Pane className="animate-in">
         <PDF />
+      </Tab.Pane>
+    ),
+  },
+  {
+    menuItem: "Youtube",
+    route: routes.youtube,
+    render: () => (
+      <Tab.Pane className="animate-in">
+        <Youtube />
       </Tab.Pane>
     ),
   },
