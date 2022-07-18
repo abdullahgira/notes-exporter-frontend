@@ -63,6 +63,21 @@ const Youtube = () => {
 
       {result && (
         <>
+          <a
+            href={`${backendURL}static/htmlBefore.html`}
+            download
+            target="_blank"
+          >
+            Html before
+          </a>
+          <a
+            href={`${backendURL}static/htmlAfter.html`}
+            download
+            target="_blank"
+          >
+            Html after
+          </a>
+
           <div className="my-4">
             <div class="flex justify-end">
               <Button
@@ -77,32 +92,17 @@ const Youtube = () => {
               className="mt-2 py-4 px-2 border border-gray-200 rounded-md h-96 overflow-y-scroll"
               id="notes"
             >
-              {/* <h1>{result.title}</h1>
-            <a href={url}>{url}</a> */}
+              <h1>{result.title}</h1>
+              <a href={url}>{url}</a>
 
-              {/* {result.notes.map((h, i) => (
-              <div key={h.link} className="my-4">
-                <p>{h.note}</p>
-                <a href={h.link}>
-                  [{h.from} - {h.to}]
-                </a>
-              </div>
-            ))} */}
-              {/* {result.htmlBefore} */}
-              <a
-                href={`${backendURL}static/htmlBefore.html`}
-                download
-                target="_blank"
-              >
-                Html before
-              </a>
-              <a
-                href={`${backendURL}static/htmlAfter.html`}
-                download
-                target="_blank"
-              >
-                Html after
-              </a>
+              {result.notes.map((h, i) => (
+                <div key={h.link} className="my-4">
+                  <p>{h.note}</p>
+                  <a href={h.link}>
+                    [{h.from} - {h.to}]
+                  </a>
+                </div>
+              ))}
             </div>
           </div>
         </>
