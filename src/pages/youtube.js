@@ -14,13 +14,7 @@ const Youtube = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const copy = useCopyToClipboard();
 
-  const backendURL =
-    process.env.NODE_ENV !== "production"
-      ? process.env.REACT_APP_DEV_URL
-      : process.env.REACT_APP_PROD_URL;
-
   const onSubmit = (data) => {
-    // setSecret(data.secret);
     setUrl(data.url);
 
     setIsLoading(true);
@@ -62,50 +56,33 @@ const Youtube = () => {
       </Formik>
 
       {result && (
-        <>
-          <a
-            href={`${backendURL}static/htmlBefore.html`}
-            download
-            target="_blank"
-          >
-            Html before
-          </a>
-          <a
-            href={`${backendURL}static/htmlAfter.html`}
-            download
-            target="_blank"
-          >
-            Html after
-          </a>
-
-          <div className="my-4">
-            <div class="flex justify-end">
-              <Button
-                className="ml-auto mb-2 flex items-center gap-2"
-                onClick={() => copy(document.getElementById("notes").innerHTML)}
-              >
-                <FiCopy size="16" />
-                Copy
-              </Button>
-            </div>
-            <div
-              className="mt-2 py-4 px-2 border border-gray-200 rounded-md h-96 overflow-y-scroll"
-              id="notes"
+        <div className="my-4">
+          <div class="flex justify-end">
+            <Button
+              className="ml-auto mb-2 flex items-center gap-2"
+              onClick={() => copy(document.getElementById("notes").innerHTML)}
             >
-              <h1>{result.title}</h1>
-              <a href={url}>{url}</a>
-
-              {result.notes.map((h, i) => (
-                <div key={h.link} className="my-4">
-                  <p>{h.note}</p>
-                  <a href={h.link}>
-                    [{h.from} - {h.to}]
-                  </a>
-                </div>
-              ))}
-            </div>
+              <FiCopy size="16" />
+              Copy
+            </Button>
           </div>
-        </>
+          <div
+            className="mt-2 py-4 px-2 border border-gray-200 rounded-md h-96 overflow-y-scroll"
+            id="notes"
+          >
+            <h1>{result.title}</h1>
+            <a href={url}>{url}</a>
+
+            {result.notes.map((h, i) => (
+              <div key={h.link} className="my-4">
+                <p>{h.note}</p>
+                <a href={h.link}>
+                  [{h.from} - {h.to}]
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
