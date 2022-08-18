@@ -30,7 +30,10 @@ const Youtube = () => {
         <h3>Guide</h3>
         <ul className="list-disc ml-8">
           <li>Each timestamp has to be in a new line</li>
-          <li>Timestamp format is: hh:mm:ss</li>
+          <li>
+            Timestamp format is: hh:mm:ss[,duration in seconds (default 10
+            seconds)]
+          </li>
           <li>
             If the timestamp format is not followed, funny results may happen,
             enojy ;)
