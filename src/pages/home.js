@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Tab } from "semantic-ui-react";
+import { Tab } from "semantic-ui-react";
 
 import useTab from "../hooks/use-tab";
 import routes from "../routes";
@@ -8,6 +8,7 @@ import GooglePlayBooks from "./google-play-books";
 import Coursera from "./coursera";
 import PDF from "./pdf";
 import Youtube from "./youtube";
+import Kindle from "./kindle";
 
 const panes = [
   {
@@ -52,6 +53,15 @@ const panes = [
     render: () => (
       <Tab.Pane className="animate-in">
         <Youtube />
+      </Tab.Pane>
+    ),
+  },
+  {
+    menuItem: "Kindle",
+    route: routes.kindle,
+    render: () => (
+      <Tab.Pane className="animate-in">
+        <Kindle />
       </Tab.Pane>
     ),
   },

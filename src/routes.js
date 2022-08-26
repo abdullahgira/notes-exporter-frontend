@@ -4,5 +4,6 @@ const routes = {
   coursera: "/coursera",
   pdf: "/pdf",
   youtube: "/youtube",
+  kindle: "/kindle",
 };
 export default routes;
