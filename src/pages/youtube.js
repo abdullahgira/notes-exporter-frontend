@@ -1,20 +1,44 @@
-import { Formik } from "formik";
+import { useFormik } from "formik";
 import React from "react";
 import { FiCopy } from "react-icons/fi";
+import YouTube from "react-youtube";
 import { Button, Form } from "semantic-ui-react";
 import api from "../api";
 import FormikInput from "../components/formik/formik-input";
 import FormikTextArea from "../components/formik/formik-textarea";
 import { axios } from "../config/axios-config";
 import useCopyToClipboard from "../hooks/use-copy-to-clipboard";
+import { _getVideoId } from "../utils/youtube-utils";
 
 const Youtube = () => {
+  const formik = useFormik({
+    initialValues: { url: "", timestamps: "" },
+  });
   const [url, setUrl] = React.useState("");
+  const [currentTime, setCurrentTime] = React.useState(0);
   const [result, setResult] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
+
   const copy = useCopyToClipboard();
 
-  const onSubmit = (data) => {
+  const captureMoment = React.useCallback(() => {
+    let h = Math.floor(currentTime / 3600);
+    let m = Math.floor((currentTime % 3600) / 60);
+    let s = Math.floor((currentTime % 3600) % 60);
+
+    formik.setFieldValue(
+      "timestamps",
+      `${formik.values.timestamps}${h && h + ":"}${m}:${s},30\n\n`
+    );
+  }, [currentTime, formik]);
+
+  const updateElpasedTime = React.useCallback((e) => {
+    setCurrentTime(e.target.getCurrentTime());
+  }, []);
+
+  const onSubmit = React.useCallback(() => {
+    const data = formik.values;
+
     setUrl(data.url);
 
     setIsLoading(true);
@@ -22,7 +46,7 @@ const Youtube = () => {
       .post(api.youtube, data)
       .then((response) => setResult(response.data))
       .finally(() => setIsLoading(false));
-  };
+  }, []);
 
   return (
     <div>
@@ -41,22 +65,41 @@ const Youtube = () => {
         </ul>
       </div>
 
-      <Formik initialValues={{ timestamps: "", url: "" }} onSubmit={onSubmit}>
-        {(formik) => (
-          <Form
-            autocomplete="off"
-            onSubmit={formik.handleSubmit}
-            loading={isLoading}
-          >
-            <FormikInput label="URL" name="url" className="pb-4" />
-            <FormikTextArea label="Timestamps" name="timestamps" />
+      <Form autocomplete="off" onSubmit={onSubmit} loading={isLoading}>
+        <FormikInput
+          label="URL"
+          name="url"
+          className="pb-4"
+          onChange={formik.handleChange}
+          value={formik.values.url}
+        />
 
-            <Button type="submit" primary>
-              Submit
-            </Button>
-          </Form>
+        {formik.values.url && (
+          <YouTube
+            videoId={_getVideoId(formik.values.url)}
+            onStateChange={updateElpasedTime}
+          />
         )}
-      </Formik>
+
+        <Button
+          type="button"
+          className="mt-2"
+          onClick={() => captureMoment(formik)}
+        >
+          Capture moment
+        </Button>
+
+        <FormikTextArea
+          label="Timestamps"
+          name="timestamps"
+          onChange={formik.handleChange}
+          value={formik.values.timestamps}
+        />
+
+        <Button type="submit" primary>
+          Submit
+        </Button>
+      </Form>
 
       {result && (
         <div className="my-4">
