@@ -8,8 +8,12 @@ import FormikInput from "../components/formik/formik-input";
 import FormikTextArea from "../components/formik/formik-textarea";
 import { axios } from "../config/axios-config";
 import useCopyToClipboard from "../hooks/use-copy-to-clipboard";
-import { _getVideoId } from "../utils/youtube-utils";
+import { formatTime, _getVideoId } from "../utils/youtube-utils";
 
+/**
+ * Creates a timer to track youtube API changes to the progress bar
+ *
+ */
 const Youtube = () => {
   const formik = useFormik({
     initialValues: { url: "", timestamps: "" },
@@ -18,6 +22,8 @@ const Youtube = () => {
   const [currentTime, setCurrentTime] = React.useState(0);
   const [result, setResult] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const timerRef = React.useRef(null);
 
   const copy = useCopyToClipboard();
 
@@ -28,12 +34,22 @@ const Youtube = () => {
 
     formik.setFieldValue(
       "timestamps",
-      `${formik.values.timestamps}${h && h + ":"}${m}:${s},30\n\n`
+      `${formik.values.timestamps}${formatTime(h, m, s)},30\n\n`
     );
   }, [currentTime, formik]);
 
   const updateElpasedTime = React.useCallback((e) => {
     setCurrentTime(e.target.getCurrentTime());
+  }, []);
+
+  const onPlay = React.useCallback(() => {
+    timerRef.current = setInterval(() => {
+      setCurrentTime((pre) => pre + 1);
+    }, 1000);
+  }, []);
+
+  const onPause = React.useCallback(() => {
+    clearInterval(timerRef.current);
   }, []);
 
   const onSubmit = React.useCallback(() => {
@@ -46,7 +62,7 @@ const Youtube = () => {
       .post(api.youtube, data)
       .then((response) => setResult(response.data))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [formik]);
 
   return (
     <div>
@@ -78,6 +94,8 @@ const Youtube = () => {
           <YouTube
             videoId={_getVideoId(formik.values.url)}
             onStateChange={updateElpasedTime}
+            onPlay={onPlay}
+            onPause={onPause}
           />
         )}
 
@@ -119,7 +137,7 @@ const Youtube = () => {
             <h1>{result.title}</h1>
             <a href={url}>{url}</a>
 
-            {result.notes.map((h, i) => (
+            {result.notes?.map((h, i) => (
               <div key={h.link} className="my-4">
                 <p>{h.note}</p>
                 <a href={h.link}>

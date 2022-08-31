@@ -19,3 +19,11 @@ export function _formatURL(link) {
   if (!videoId) return "";
   return `https://www.youtube.com/embed/${videoId}`;
 }
+
+function _prependZero(time) {
+  return `${time < 10 ? `0${time}` : time}`;
+}
+
+export function formatTime(h, m, s) {
+  return `${h ? h + ":" : ""}${_prependZero(m)}:${_prependZero(s)}`;
+}
