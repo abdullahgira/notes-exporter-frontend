@@ -1,4 +1,4 @@
-export function _getVideoId(link) {
+export function getVideoId(link) {
   const videoId = "";
   const patterns = [
     /https:\/\/www\.youtube\.com\/watch\?v=(\w+)/,
@@ -14,8 +14,8 @@ export function _getVideoId(link) {
   return groups[1];
 }
 
-export function _formatURL(link) {
-  const videoId = _getVideoId(link);
+export function formatURL(link) {
+  const videoId = getVideoId(link);
   if (!videoId) return "";
   return `https://www.youtube.com/embed/${videoId}`;
 }
