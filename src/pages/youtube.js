@@ -23,12 +23,12 @@ const Youtube = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
 
-  const ytRef = React.useRef(null);
+  const playerRef = React.useRef(null);
 
   const copy = useCopyToClipboard();
 
   const captureMoment = React.useCallback(() => {
-    const currentTime = ytRef.current.getCurrentTime();
+    const currentTime = playerRef.current.getCurrentTime();
 
     let h = Math.floor(currentTime / 3600);
     let m = Math.floor((currentTime % 3600) / 60);
@@ -44,14 +44,18 @@ const Youtube = () => {
   }, [formik]);
 
   const seekTo = React.useCallback((val) => {
-    const seekToTime = ytRef.current?.getCurrentTime() + val;
-    ytRef.current?.seekTo(seekToTime);
+    const seekToTime = playerRef.current?.getCurrentTime() + val;
+    playerRef.current?.seekTo(seekToTime);
   }, []);
 
   const togglePlay = React.useCallback(() => {
-    if (isPlaying) ytRef.current?.pauseVideo();
-    else ytRef.current?.playVideo();
+    if (isPlaying) playerRef.current?.pauseVideo();
+    else playerRef.current?.playVideo();
   }, [isPlaying]);
+
+  const setPlaybackRate = React.useCallback((rate) => {
+    playerRef.current?.setPlaybackRate(rate);
+  }, []);
 
   const onPlay = React.useCallback(() => {
     setIsPlaying(true);
@@ -62,7 +66,7 @@ const Youtube = () => {
   }, []);
 
   const onReady = React.useCallback((e) => {
-    ytRef.current = e.target;
+    playerRef.current = e.target;
   }, []);
 
   const onSubmit = React.useCallback(() => {
@@ -112,6 +116,28 @@ const Youtube = () => {
           />
         )}
 
+        <Button
+          type="button"
+          className="mt-5"
+          onClick={() => captureMoment(formik)}
+        >
+          <Icon name="pencil" />
+          Capture moment
+        </Button>
+
+        <p>Playback Rate</p>
+        <div className="flex items-center gap-4 mb-5">
+          <Button type="button" icon onClick={() => setPlaybackRate(1)}>
+            1x
+          </Button>
+          <Button type="button" icon onClick={() => setPlaybackRate(1.5)}>
+            1.5
+          </Button>
+          <Button type="button" icon onClick={() => setPlaybackRate(2)}>
+            2
+          </Button>
+        </div>
+
         <p>Controls</p>
         <div className="flex items-center gap-4 mb-5">
           <Button type="button" icon onClick={() => seekTo(-10)}>
@@ -136,15 +162,6 @@ const Youtube = () => {
             <Icon name="angle double right"></Icon>
           </Button>
         </div>
-
-        <Button
-          type="button"
-          className="mt-2"
-          onClick={() => captureMoment(formik)}
-        >
-          <Icon name="pencil" />
-          Capture moment
-        </Button>
 
         <FormikTextArea
           label="Timestamps"
