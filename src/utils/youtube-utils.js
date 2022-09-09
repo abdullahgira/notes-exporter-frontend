@@ -1,16 +1,10 @@
 export function getVideoId(link) {
-  const videoId = "";
-  const patterns = [
-    /https:\/\/www\.youtube\.com\/watch\?v=(\w+)/,
-    /https:\/\/youtu\.be\/(\w+)/,
-  ];
+  const pattern =
+    /^https:\/\/(?:www\.youtube\.com\/watch\?v=|youtu\.be\/)([\w\d-]+)/;
 
-  const matchedPattern = patterns.filter((p) => p.test(link))[0];
-  if (!matchedPattern) return;
+  const groups = link.match(pattern);
 
-  const groups = link.match(matchedPattern);
-
-  if (!groups.length) return;
+  if (!groups?.length) return;
   return groups[1];
 }
 
