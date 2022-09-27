@@ -10,6 +10,8 @@ export default function useLocalStorage(
     () => window.localStorage.getItem(key) || defaultValue
   );
 
+  console.log({ state });
+
   useEffect(() => {
     window.localStorage.setItem(serialize(key), state);
   }, [key, state]);

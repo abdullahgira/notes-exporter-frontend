@@ -37,7 +37,7 @@ const Notion = () => {
       </div>
 
       <Formik
-        initialValues={{ secret: secret, url: "" }}
+        initialValues={{ secret, url: "" }}
         enableReinitialize
         onSubmit={onSubmit}
       >
