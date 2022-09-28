@@ -15,8 +15,11 @@ import { formatTime, getVideoId } from "../utils/youtube-utils";
  *
  */
 const Youtube = () => {
+  let onSubmit;
+
   const formik = useFormik({
     initialValues: { url: "", timestamps: "" },
+    onSubmit,
   });
   const [url, setUrl] = React.useState("");
   const [result, setResult] = React.useState();
@@ -69,7 +72,7 @@ const Youtube = () => {
     playerRef.current = e.target;
   }, []);
 
-  const onSubmit = React.useCallback(() => {
+  onSubmit = React.useCallback(() => {
     const data = formik.values;
 
     setUrl(data.url);
@@ -99,7 +102,7 @@ const Youtube = () => {
       </div>
 
       <Form autocomplete="off" onSubmit={onSubmit} loading={isLoading}>
-        <FormikInput
+        <Form.Input
           label="URL"
           name="url"
           className="pb-4"
