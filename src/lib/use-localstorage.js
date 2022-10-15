@@ -7,12 +7,12 @@ export default function useLocalStorage(
   deserialize = (val) => val
 ) {
   const [state, setState] = useState(
-    () => window.localStorage.getItem(key) || defaultValue
+    () => deserialize(window.localStorage.getItem(key)) || defaultValue
   );
 
   useEffect(() => {
-    window.localStorage.setItem(serialize(key), state);
+    window.localStorage.setItem(key, serialize(state));
   }, [key, state]);
 
-  return [deserialize(state), setState];
+  return [state, setState];
 }

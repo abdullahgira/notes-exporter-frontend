@@ -1,13 +1,12 @@
-import { useFormik } from "formik";
 import React from "react";
 import { FiCopy } from "react-icons/fi";
 import YouTube from "react-youtube";
 import { Button, Form, Icon } from "semantic-ui-react";
+
 import api from "../api";
-import FormikInput from "../components/formik/formik-input";
-import FormikTextArea from "../components/formik/formik-textarea";
 import { axios } from "../config/axios-config";
 import useCopyToClipboard from "../hooks/use-copy-to-clipboard";
+import useLocalStorage from "../lib/use-localstorage";
 import { formatTime, getVideoId } from "../utils/youtube-utils";
 
 /**
@@ -17,12 +16,15 @@ import { formatTime, getVideoId } from "../utils/youtube-utils";
 const Youtube = () => {
   let onSubmit;
 
-  const formik = useFormik({
-    initialValues: { url: "", timestamps: "" },
-    onSubmit,
-  });
-  const [url, setUrl] = React.useState("");
-  const [result, setResult] = React.useState();
+  const [timestamps, setTimestamps] = useLocalStorage("timestamps");
+  const [url, setUrl] = useLocalStorage("url");
+  const [result, setResult] = useLocalStorage(
+    "result",
+    {},
+    JSON.stringify,
+    JSON.parse
+  );
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
 
@@ -31,20 +33,18 @@ const Youtube = () => {
   const copy = useCopyToClipboard();
 
   const captureMoment = React.useCallback(() => {
+    console.log(playerRef.current);
     const currentTime = playerRef.current.getCurrentTime();
 
     let h = Math.floor(currentTime / 3600);
     let m = Math.floor((currentTime % 3600) / 60);
     let s = Math.floor((currentTime % 3600) % 60);
 
-    formik.setFieldValue(
-      "timestamps",
-      `${formik.values.timestamps}${formatTime(h, m, s)},30\n\n`
-    );
+    setTimestamps(`${timestamps}${formatTime(h, m, s)},30\n\n`);
 
     const textarea = document.getElementById("timestamps");
     textarea.scrollTop = textarea.scrollHeight;
-  }, [formik]);
+  }, [timestamps]);
 
   const seekTo = React.useCallback((val) => {
     const seekToTime = playerRef.current?.getCurrentTime() + val;
@@ -73,16 +73,16 @@ const Youtube = () => {
   }, []);
 
   onSubmit = React.useCallback(() => {
-    const data = formik.values;
+    const data = { url, timestamps };
 
-    setUrl(data.url);
+    // setUrl(data.url);
 
     setIsLoading(true);
     axios
       .post(api.youtube, data)
       .then((response) => setResult(response.data))
       .finally(() => setIsLoading(false));
-  }, [formik]);
+  }, [url, timestamps]);
 
   return (
     <div>
@@ -102,28 +102,40 @@ const Youtube = () => {
       </div>
 
       <Form autocomplete="off" onSubmit={onSubmit} loading={isLoading}>
-        <Form.Input
-          label="URL"
-          name="url"
-          className="pb-4"
-          onChange={formik.handleChange}
-          value={formik.values.url}
-        />
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <Form.Input
+            label="URL"
+            name="url"
+            className=" flex-grow"
+            onChange={(e) => setUrl(e.target.value)}
+            value={url}
+          />
 
-        {formik.values.url && getVideoId(formik.values.url) && (
+          <Button
+            type="button"
+            className="mt-3"
+            onClick={() => {
+              if (window.confirm("Reset the state?")) {
+                setUrl("");
+                setTimestamps("");
+                setResult("");
+              }
+            }}
+          >
+            <Icon name="refresh" />
+            Reset
+          </Button>
+        </div>
+        {url && getVideoId(url) && (
           <YouTube
-            videoId={getVideoId(formik.values.url)}
+            videoId={getVideoId(url)}
             onPlay={onPlay}
             onPause={onPause}
             onReady={onReady}
           />
         )}
 
-        <Button
-          type="button"
-          className="mt-5"
-          onClick={() => captureMoment(formik)}
-        >
+        <Button type="button" className="mt-5" onClick={() => captureMoment()}>
           <Icon name="pencil" />
           Capture moment
         </Button>
@@ -166,15 +178,15 @@ const Youtube = () => {
           </Button>
         </div>
 
-        <FormikTextArea
+        <Form.TextArea
+          id="timestamps"
           label="Timestamps"
-          name="timestamps"
           rows={10}
-          onChange={formik.handleChange}
-          value={formik.values.timestamps}
+          onChange={(e) => setTimestamps(e.target.value)}
+          value={timestamps}
         />
 
-        <Button type="submit" primary>
+        <Button type="submit" primary onClick={onSubmit}>
           Submit
         </Button>
       </Form>
