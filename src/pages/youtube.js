@@ -14,8 +14,7 @@ import { formatTime, getVideoId } from "../utils/youtube-utils";
  *
  */
 const Youtube = () => {
-  let onSubmit;
-
+  const [title, setTitle] = useLocalStorage("title");
   const [timestamps, setTimestamps] = useLocalStorage("timestamps");
   const [url, setUrl] = useLocalStorage("url");
   const [result, setResult] = useLocalStorage(
@@ -33,7 +32,7 @@ const Youtube = () => {
   const copy = useCopyToClipboard();
 
   const captureMoment = React.useCallback(() => {
-    console.log(playerRef.current);
+    setTitle(playerRef.current.videoTitle);
     const currentTime = playerRef.current.getCurrentTime();
 
     let h = Math.floor(currentTime / 3600);
@@ -72,10 +71,17 @@ const Youtube = () => {
     playerRef.current = e.target;
   }, []);
 
-  onSubmit = React.useCallback(() => {
-    const data = { url, timestamps };
+  const onReset = React.useCallback(() => {
+    if (window.confirm("Reset the state?")) {
+      setUrl("");
+      setTimestamps("");
+      setResult("");
+      setTitle("");
+    }
+  }, []);
 
-    // setUrl(data.url);
+  const onSubmit = React.useCallback(() => {
+    const data = { url, timestamps };
 
     setIsLoading(true);
     axios
@@ -111,17 +117,7 @@ const Youtube = () => {
             value={url}
           />
 
-          <Button
-            type="button"
-            className="mt-3"
-            onClick={() => {
-              if (window.confirm("Reset the state?")) {
-                setUrl("");
-                setTimestamps("");
-                setResult("");
-              }
-            }}
-          >
+          <Button type="button" className="mt-3" onClick={onReset}>
             <Icon name="refresh" />
             Reset
           </Button>
@@ -206,8 +202,9 @@ const Youtube = () => {
             className="mt-2 py-4 px-2 border border-gray-200 rounded-md h-96 overflow-y-scroll"
             id="notes"
           >
-            <h1>{result.title}</h1>
+            <h1>{title}</h1>
             <a href={url}>{url}</a>
+            <p></p>
 
             {result.notes?.map((h, i) => (
               <div key={h.link} className="my-4">
@@ -215,6 +212,7 @@ const Youtube = () => {
                 <a href={h.link}>
                   [{h.from} - {h.to}]
                 </a>
+                <p></p>
               </div>
             ))}
           </div>
