@@ -11,6 +11,7 @@ import HighlightContainer from "../components/highligh-container";
 import Highlight from "../components/highlight";
 import Note from "../components/note";
 import Reference from "../components/reference";
+import { FileUploader } from "react-drag-drop-files";
 
 const PDF = () => {
   const [file, setFile] = React.useState(null);
@@ -59,11 +60,13 @@ const PDF = () => {
       </div>
 
       <Form autocomplete="off" onSubmit={onSubmit} loading={isLoading}>
-        <FileAttachment
-          id="pdf-notes"
-          setAttachmentData={setFile}
-          label="Select the HTML file exported from google docs."
-        />
+        <div className="my-5">
+          <FileUploader
+            handleChange={(file) => setFile(file)}
+            name="file"
+            types={["PDF"]}
+          />
+        </div>
 
         <Button type="submit" primary>
           Submit
