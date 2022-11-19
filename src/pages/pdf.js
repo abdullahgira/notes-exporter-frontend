@@ -1,27 +1,41 @@
 import React from "react";
 import { FiCopy } from "react-icons/fi";
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, Message } from "semantic-ui-react";
+
 import api from "../api";
-import FileAttachment from "../components/file-attachment";
 import { axios } from "../config/axios-config";
 import useCopyToClipboard from "../hooks/use-copy-to-clipboard";
 
+import FileAttachment from "../components/file-attachment";
+import HighlightContainer from "../components/highligh-container";
+import Highlight from "../components/highlight";
+import Note from "../components/note";
+import Reference from "../components/reference";
+
 const PDF = () => {
   const [file, setFile] = React.useState(null);
+  const [error, setError] = React.useState(null);
+  const [title, setTitle] = React.useState("");
 
   const [result, setResult] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const copy = useCopyToClipboard();
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
+    if (!file) setError("Please select a file first!");
+    else if (file) setError(null);
+
     setIsLoading(true);
     const formData = new FormData();
     formData.append("file", file);
 
     axios
       .post(api.pdf, formData)
-      .then((response) => setResult(response.data))
+      .then((response) => {
+        setResult(response.data);
+        setTitle(file.name.replace(/.pdf$/gi, ""));
+      })
       .finally(() => setIsLoading(false));
   };
 
@@ -30,7 +44,17 @@ const PDF = () => {
       <div class="mb-4">
         <h3>Guide</h3>
         <ul className="list-disc ml-8">
-          <li>WIP</li>
+          <li>Attach the PDF to export the highlights from</li>
+          <li>Submit!</li>
+        </ul>
+      </div>
+
+      <div class="mb-4">
+        <h3>Contributors</h3>
+        <ul className="list-disc ml-8">
+          <li>
+            <a href="https://github.com/0xabu/pdfannots">pdfannots </a>
+          </li>
         </ul>
       </div>
 
@@ -44,6 +68,8 @@ const PDF = () => {
         <Button type="submit" primary>
           Submit
         </Button>
+
+        {error && <Message negative>{error}</Message>}
       </Form>
 
       {result && (
@@ -61,13 +87,16 @@ const PDF = () => {
             className="mt-2 py-4 px-2 border border-gray-200 rounded-md"
             id="notes"
           >
-            <h1>{result.title}</h1>
+            <h1>{title}</h1>
 
             {result.highlights.map((h, i) => (
-              <div key={h.note} className="my-4">
-                <p>{h.note}</p>
-                <p>[{h.link.toUpperCase()}]</p>
-              </div>
+              <HighlightContainer key={h.text}>
+                <div className="my-4">
+                  <Reference>PAGE: {h.page}</Reference>
+                  <Highlight>{h.text}</Highlight>
+                  {h.contents && <Note>{h.contents}</Note>}
+                </div>
+              </HighlightContainer>
             ))}
           </div>
         </div>
