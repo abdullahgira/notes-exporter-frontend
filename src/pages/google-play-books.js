@@ -1,10 +1,15 @@
 import { Formik } from "formik";
 import React from "react";
+import { FileUploader } from "react-drag-drop-files";
 import { FiCopy } from "react-icons/fi";
 import { Button, Form } from "semantic-ui-react";
 import api from "../api";
 import FileAttachment from "../components/file-attachment";
 import FormikInput from "../components/formik/formik-input";
+import HighlightContainer from "../components/highligh-container";
+import Highlight from "../components/highlight";
+import Note from "../components/note";
+import Reference from "../components/reference";
 import { axios } from "../config/axios-config";
 import useCopyToClipboard from "../hooks/use-copy-to-clipboard";
 import useLocalStorage from "../lib/use-localstorage";
@@ -38,11 +43,13 @@ const GooglePlayBooks = () => {
       </div>
 
       <Form autocomplete="off" onSubmit={onSubmit} loading={isLoading}>
-        <FileAttachment
-          id="google-notes"
-          setAttachmentData={setFile}
-          label="Select the HTML file exported from google docs."
-        />
+        <div className="my-5">
+          <FileUploader
+            handleChange={(file) => setFile(file)}
+            name="file"
+            types={["html"]}
+          />
+        </div>
 
         <Button type="submit" primary>
           Submit
@@ -67,10 +74,13 @@ const GooglePlayBooks = () => {
             <h1>{result.title}</h1>
 
             {result.highlights.map((h, i) => (
-              <div key={h.note} className="my-4">
-                <p>{h.note}</p>
-                <a href={h.link}>Link</a>
-              </div>
+              <HighlightContainer key={h.note}>
+                <Reference>
+                  {" "}
+                  <a href={h.link}>Link</a>{" "}
+                </Reference>
+                <Highlight>{h.note}</Highlight>
+              </HighlightContainer>
             ))}
           </div>
         </div>

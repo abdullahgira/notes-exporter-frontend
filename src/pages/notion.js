@@ -4,6 +4,9 @@ import { FiCopy } from "react-icons/fi";
 import { Button, Form } from "semantic-ui-react";
 import api from "../api";
 import FormikInput from "../components/formik/formik-input";
+import HighlightContainer from "../components/highligh-container";
+import Highlight from "../components/highlight";
+import Reference from "../components/reference";
 import { axios } from "../config/axios-config";
 import useCopyToClipboard from "../hooks/use-copy-to-clipboard";
 import useLocalStorage from "../lib/use-localstorage";
@@ -76,19 +79,20 @@ const Notion = () => {
             <a href={url}>{url}</a>
 
             {result.highlights.map((h, i) => (
-              <div key={h.blockId} className="my-4">
-                <p>{h.text}</p>
+              <HighlightContainer key={h.blockId}>
                 {!h.groupWithNextBlock && (
-                  <a
-                    href={`https://www.notion.so/${result.pageId}#${h.blockId
-                      .split("-")
-                      .join("")}`}
-                  >
-                    Link to block
-                  </a>
+                  <Reference>
+                    <a
+                      href={`https://www.notion.so/${result.pageId}#${h.blockId
+                        .split("-")
+                        .join("")}`}
+                    >
+                      Link to block
+                    </a>
+                  </Reference>
                 )}
-                <p></p>
-              </div>
+                <Highlight>{h.text}</Highlight>
+              </HighlightContainer>
             ))}
           </div>
         </div>
