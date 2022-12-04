@@ -80,6 +80,7 @@ const GooglePlayBooks = () => {
                   <a href={h.link}>Link</a>{" "}
                 </Reference>
                 <Highlight>{h.note}</Highlight>
+                {h.yourNote && <Note>{h.yourNote}</Note>}
               </HighlightContainer>
             ))}
           </div>
