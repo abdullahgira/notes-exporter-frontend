@@ -95,10 +95,26 @@ const Youtube = () => {
       <div class="mb-4">
         <h3>Guide</h3>
         <ul className="list-disc ml-8">
-          <li>Each timestamp has to be in a new line</li>
+          <li>Add the video link to the URL input.</li>
           <li>
-            Timestamp format is: hh:mm:ss[,duration in seconds (default 10
-            seconds)]
+            Play the video and when a moment comes that you want to capture,
+            click capture moment button.
+          </li>
+          <li>You can modify the playback rate and skip intervals</li>
+          <li>You can see the selected timestamps in the timestamps box</li>
+          <li>Each timestamp has to be in a new line.</li>
+          <li>
+            The timestamp will be replaced with the transcript of the selected
+            moment.
+          </li>
+          <li>
+            Timestamp format is: HH:MM:SS[,duration in sec. (default: 30 sec.)].
+          </li>
+          <li>
+            Selected duration will be pre to the selected second and post time
+            always be 5 seconds. <br />
+            <strong>Eg: </strong>00:08,30 will get the transcript from 00:00 to
+            00:13, 00:40,30 will get the transcript from 00:10 to 00:45, ...etc.
           </li>
           <li>
             If the timestamp format is not followed, funny results may happen,
